@@ -16,17 +16,19 @@ namespace TeltonikaTask
             bool showMenu = true;
 
             List<GpsData> gpsData = new List<GpsData>();
-
             JsonDataRepository json = new JsonDataRepository();
-            gpsData = json.LoadData(fileNameJson);
+            CsvDataRepository csv = new CsvDataRepository();
 
-            Console.WriteLine("Parsed gps records: " + gpsData.Count);
+            //gpsData = json.LoadData(fileNameJson);
+            gpsData = csv.LoadData(fileNameCsv);
+            
 
             showMenu = CheckDataExist(showMenu, gpsData);
 
             while (showMenu == true)
             {
                 Console.Clear();
+                Console.WriteLine("Parsed gps records: " + gpsData.Count);
                 Console.WriteLine("Choose an option:");
                 Console.WriteLine("1) Print Satellites Histogram");
                 Console.WriteLine("2) Print Speed Historgram");
@@ -41,6 +43,8 @@ namespace TeltonikaTask
                         s.PrintSatellitesHistogram(gpsData);
                         break;
                     case "2":
+                        SpeedHistogram sp = new SpeedHistogram();
+                        sp.PrintSpeedHistogram(gpsData);
                         //Todo
                         break;
                     case "3":
