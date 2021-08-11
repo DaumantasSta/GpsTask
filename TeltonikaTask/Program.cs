@@ -22,7 +22,6 @@ namespace TeltonikaTask
             //gpsData = json.LoadData(fileNameJson);
             gpsData = csv.LoadData(fileNameCsv);
             
-
             showMenu = CheckDataExist(showMenu, gpsData);
 
             while (showMenu == true)
@@ -48,7 +47,8 @@ namespace TeltonikaTask
                         //Todo
                         break;
                     case "3":
-                        //Todo
+                        RoadSection sh = new RoadSection();
+                        sh.FindFasterRoadSection(gpsData);
                         break;
                     case "4":
                         showMenu = false;
