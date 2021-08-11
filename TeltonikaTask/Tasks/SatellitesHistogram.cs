@@ -11,10 +11,11 @@ namespace TeltonikaTask.Tasks
     {
         public void PrintSatellitesHistogram(List<GpsData> gpsData)
         {
+
             var satNumComb = gpsData.Select(x => x.Satellites).Distinct().ToArray();
             Array.Sort(satNumComb);
 
-            //Geting hits quantity of satelite number combinations
+            //Geting hits quantity of certain satellites
             int[] satNumHits = new int[satNumComb.Count()];
 
             for (int i = 0; i < satNumComb.Count(); i++)
@@ -28,19 +29,14 @@ namespace TeltonikaTask.Tasks
             for (int i = 0; i < satNumComb.Count(); i++)
             {
                 satNumHitRatio[i] = (double)satNumHits[i] / maxSatHitsValue * 100;
-                satNumHitRatio[i] = Math.Round(satNumHitRatio[i] / 5.0);
+                satNumHitRatio[i] = Math.Round(satNumHitRatio[i] / 5.0)+1;
             }
 
-            /////////////////////////////////////TESTING////////////////////////////////////////////////////////////
-            for (int i = 0; i < satNumComb.Count(); i++)
-                Console.WriteLine(satNumComb[i] + "-------" + satNumHits[i] + "--------" + satNumHitRatio[i]);
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            //Printing histogram
             Console.WriteLine("                                                              " + maxSatHitsValue + "hits");
-            List<double> list = satNumHitRatio.ToList();
-            Histogram(list);
-
-            //Historgram X GUI
+            
+            Histogram(satNumHitRatio.ToList());
+            //Bottom of the histogram
             foreach (int i in satNumComb)
             {
                 if (i < 10) Console.Write("0" + i + " ");

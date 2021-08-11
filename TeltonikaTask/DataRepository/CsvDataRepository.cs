@@ -10,12 +10,10 @@ namespace TeltonikaTask.DataRepository
 {
     public class CsvDataRepository
     {
-
         public List<GpsData> LoadData(string fileName)
         {
                 List<GpsData> gpsData;
-                gpsData = File.ReadAllLines(fileName).Select(v => CsvForm(v))
-                                               .ToList();
+                gpsData = File.ReadAllLines(fileName).Select(v => CsvForm(v)).ToList();
 
                 return gpsData;
         }

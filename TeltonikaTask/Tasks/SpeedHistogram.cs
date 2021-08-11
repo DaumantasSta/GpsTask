@@ -11,8 +11,8 @@ namespace TeltonikaTask.Tasks
     {
         public void PrintSpeedHistogram(List<GpsData> gpsData)
         {
-            int speedMaxNum = gpsData.Max(x => x.Speed); //302
-            int speedIntervals = (int)Math.Ceiling((double)speedMaxNum / 10); //34
+            int speedMaxNum = gpsData.Max(x => x.Speed);
+            int speedIntervals = (int)Math.Ceiling((double)speedMaxNum / 10);
 
             int[] speedIntervalHits = new int[speedIntervals];
 
@@ -42,6 +42,7 @@ namespace TeltonikaTask.Tasks
         {
             Console.WriteLine();
             Console.WriteLine("Speed historgram -------------------: hits");
+
             for (int i = 0; i < speedIntervals; i++)
             {
                 int minInterval = 10 * i;
@@ -63,11 +64,6 @@ namespace TeltonikaTask.Tasks
             }
 
             Console.WriteLine();
-            /*Data check
-            for (int i = 0; i < speedIntervals; i++)
-            {
-                Console.WriteLine(9 * i + " - " + ((9 * i) + 9) + " === " + speedIntervalHits[i] + " === " + speedIntervalHitRatio[i]);
-            } */
         }
     }
 }
