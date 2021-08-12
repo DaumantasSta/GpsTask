@@ -8,18 +8,18 @@ using TeltonikaTask.Models;
 
 namespace TeltonikaTask.Tasks
 {
-    class RoadSection
+    class RoadSections
     {
 
-        string startPosition;
-        string startGpsTimeDate;
-        string endPosition;
-        string endGpsTimeDate;
-        double totalTime;
-        double totalDistanceDriven;
-        string avgRoadSpeed;
+        private string _startPosition;
+        private string _startGpsTimeDate;
+        private string _endPosition;
+        private string _endGpsTimeDate;
+        private double _totalTime;
+        private double _totalDistanceDriven;
+        private string _avgRoadSpeed;
 
-        List<RoadSection> roadSection = new List<RoadSection>();
+        List<RoadSections> roadSections = new List<RoadSections>();
 
         public void FindFasterRoadSection(List<GpsData> gpsData)
         {
@@ -42,6 +42,7 @@ namespace TeltonikaTask.Tasks
                 {
                     if (sequenceNum == 0)
                     {
+                        //Start of sequence
                         sequenceStartLat = gpsData[i].Latitude;
                         sequenceStartLon = gpsData[i].Longitude;
                         startGpsTime = gpsData[i].GpsTime;
@@ -62,7 +63,7 @@ namespace TeltonikaTask.Tasks
                     sequenceAvgSpeed = sequenceAvgSpeed / sequenceNum;
                     double sequenceTotalTime = endGpsTime.Subtract(startGpsTime).TotalSeconds;
                     
-                    CollectAndFilterSequences(roadSection, sequenceStartLat, sequenceStartLon, sequenceAvgSpeed, startGpsTime, endGpsTime, sequenceTotalTime, sequenceDistanceDriven);
+                    CollectAndFilterSequences(roadSections, sequenceStartLat, sequenceStartLon, sequenceAvgSpeed, startGpsTime, endGpsTime, sequenceTotalTime, sequenceDistanceDriven);
 
                     //Reseting values for next sequence
                     sequenceDistanceDriven = 0;
@@ -70,31 +71,42 @@ namespace TeltonikaTask.Tasks
                 }
             }
 
-            PrintFastestRoadSectionData(roadSection);
+            PrintFastestRoadSectionData(roadSections);
             Console.ReadLine();
 
         }
 
-        private static void PrintFastestRoadSectionData(List<RoadSection> roadSection)
+        private static void PrintFastestRoadSectionData(List<RoadSections> roadSection)
         {
-            int index = roadSection.IndexOf(roadSection.First(x => x.totalTime == 
-                roadSection.Min(prop => prop.totalTime)));
+            int index = roadSection.IndexOf(roadSection.First(x => x._totalTime == 
+                roadSection.Min(prop => prop._totalTime)));
 
             Console.WriteLine();
-            Console.WriteLine("Fastest road section of at least 100km was driven over " + roadSection[index].totalTime + ",000s and was " + roadSection[index].totalDistanceDriven + "km long.");
-            Console.WriteLine("Start position " + roadSection[index].startPosition);
-            Console.WriteLine("Start gps time " + roadSection[index].startGpsTimeDate);
-            Console.WriteLine("End position " + roadSection[index].endPosition);
-            Console.WriteLine("End gps time " + roadSection[index].endGpsTimeDate);
-            Console.WriteLine("Average speed: " + roadSection[index].avgRoadSpeed + "km/h");
+            Console.WriteLine("Fastest road section of at least 100km was driven over " + roadSection[index]._totalTime +
+                ",000s and was " + roadSection[index]._totalDistanceDriven + "km long.");
+            Console.WriteLine("Start position " + roadSection[index]._startPosition);
+            Console.WriteLine("Start gps time " + roadSection[index]._startGpsTimeDate);
+            Console.WriteLine("End position " + roadSection[index]._endPosition);
+            Console.WriteLine("End gps time " + roadSection[index]._endGpsTimeDate);
+            Console.WriteLine("Average speed: " + roadSection[index]._avgRoadSpeed + "km/h");
             Console.WriteLine();
         }
 
-        private static void CollectAndFilterSequences(List<RoadSection> roadSection, double startLatitude, double startLongitude, double avgSpeed, DateTime? startGpsTime, DateTime endGpsTime, double timePassed, double distance)
+        private static void CollectAndFilterSequences(ICollection<RoadSections> roadSection, double startLatitude, double startLongitude, double avgSpeed, DateTime? startGpsTime, DateTime endGpsTime, double timePassed, double distance)
         {
             if (distance > 100)
-                roadSection.Add(new RoadSection { startPosition = startLatitude + "; " + startLongitude, startGpsTimeDate = startGpsTime.ToString(), endPosition = startLatitude + "; " + startLongitude, endGpsTimeDate = endGpsTime.ToString(), avgRoadSpeed = avgSpeed.ToString(), totalTime = timePassed, totalDistanceDriven = distance });
+            {
+                roadSection.Add(new RoadSections
+                {
+                    _startPosition = startLatitude + "; " + startLongitude,
+                    _startGpsTimeDate = startGpsTime.ToString(),
+                    _endPosition = startLatitude + "; " + startLongitude,
+                    _endGpsTimeDate = endGpsTime.ToString(),
+                    _avgRoadSpeed = Math.Round(avgSpeed, 1).ToString(),
+                    _totalTime = timePassed,
+                    _totalDistanceDriven = Math.Round(distance, 3)
+                });
+            }
         }
-
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.IO;
 using TeltonikaTask.DataRepository;
 using TeltonikaTask.Models;
 using TeltonikaTask.Tasks;
@@ -10,17 +12,24 @@ namespace TeltonikaTask
     {
         static void Main(string[] args)
         {
-            String fileNameJson = "2019-07.json";
-            String fileNameCsv = "2019-08.csv";
-            String fileNameBin = "2019-09.bin";
-            bool showMenu = true;
+            string fileNameJson = "2019-07.json";
+            string fileNameCsv = "2019-08.csv";
+            string fileNameBin = "2019-09.bin";
 
             List<GpsData> gpsData = new List<GpsData>();
+            bool showMenu = true;
+            
             JsonDataRepository json = new JsonDataRepository();
             CsvDataRepository csv = new CsvDataRepository();
+            BinDataRepository bin = new BinDataRepository();
 
             //gpsData = json.LoadData(fileNameJson);
-            gpsData = csv.LoadData(fileNameCsv);
+            //gpsData = csv.LoadData(fileNameCsv);
+            gpsData = bin.LoadData(fileNameBin);
+
+            //Adding all records together
+            //gpsData.AddRange(json.LoadData(fileNameJson));
+            //gpsData.AddRange(csv.LoadData(fileNameCsv));
             
             showMenu = CheckDataExist(showMenu, gpsData);
 
@@ -44,10 +53,9 @@ namespace TeltonikaTask
                     case "2":
                         SpeedHistogram sp = new SpeedHistogram();
                         sp.PrintSpeedHistogram(gpsData);
-                        //Todo
                         break;
                     case "3":
-                        RoadSection sh = new RoadSection();
+                        RoadSections sh = new RoadSections();
                         sh.FindFasterRoadSection(gpsData);
                         break;
                     case "4":
